@@ -54,7 +54,7 @@
                         Xin chào: <?php echo $_SESSION['username'] ?>
                     </button>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Thông tin cá nhân</a>
+                        <a class="dropdown-item" href="info_user">Thông tin cá nhân</a>
                         <a class="dropdown-item" href="register_device.php">Đăng kí thiết bị</a>
                         <a class="dropdown-item" href="#">Something else here</a>
                         <div class="dropdown-divider"></div>
