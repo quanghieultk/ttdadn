@@ -91,6 +91,7 @@ if (isset($_POST["login_submit"]))
                             <div class="form-group form-button">
                                 <input type="submit" name="login_submit" id="signin" class="form-submit" value="Log in"/>
                             </div>
+                            <div><?php $message?></div> 
                         </form>
                         <div class="social-login">
                             <span class="social-label">Or login with</span>

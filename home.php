@@ -1,6 +1,32 @@
 <?php 
     session_start();
-    
+    require_once("connection.php"); 
+    if(!isset($_SESSION['id']))
+    {
+        header('Location: login.php');
+	}
+	else {
+		$id = $_SESSION['id'] ;
+	}
+    $query = "SELECT * FROM devices WHERE user_id='{$id}'";
+    $result = mysqli_query($conn,$query);
+    kt_query($result,$query); 
+    if (isset($_POST["submit_result"]))
+     {
+        $id_device = $_POST['id_device'];
+        $date_from = $_POST['date_from'];
+        $date_to = $_POST['date_to'];
+        $query_router = "SELECT * FROM deviceroute WHERE id_device='{$id_device}' AND (date_update < '{$date_to}') AND (date_update) > '{$date_from}' ";
+        $result_router = mysqli_query($conn,$query_router);
+        kt_query($result_router,$query_router);
+        while($router_item=mysqli_fetch_array($result_router,MYSQLI_ASSOC))
+        {
+           echo ($router_item['latitude']);
+            echo ($router_item['longitude']);
+        }
+     }
+   
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,32 +104,41 @@
         <div class="row">
             <div class="col-md-3">
                 <h2 class="title">HÀNH TRÌNH</h2>
-                <form>
+                <form method="POST">
                     <div class="form-group row">
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Thiết bị</label>
                         <div class="col-sm-8">
-                            <select class="custom-select form-control form-control-sm" id="colFormLabelSm" placeholder="Tên thiết bị" style="height: 31px;font-size: .875rem;"> 
+                            <select class="custom-select form-control form-control-sm" id="colFormLabelSm" name="id_device" placeholder="Tên thiết bị" style="height: 31px;font-size: .875rem;"> 
                                 <option selected>Choose...</option>
-                                <option value="1">Honda Wave</option>
-                                <option value="2">Suzuki</option>
-                                <option value="3">Vision</option>
+                                <?php 
+                                    while($result_user=mysqli_fetch_array($result,MYSQLI_ASSOC))
+                                    {
+                                        ?>
+                                        <option value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
+                                    <?php
+                                    };
+                                ?>
+                               
+                               
                             </select>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Từ ngày</label>
                         <div class="col-sm-8">
-                        <input type="datetime-local" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
+                        <input type="datetime-local" name="date_from" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Đến ngày</label>
                         <div class="col-sm-8">
-                        <input type="datetime-local" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
+                        <input type="datetime-local" name="date_to" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
                         </div>
                     </div>
+
+                    <input type="submit" class="btn btn-primary btn-sm" name="submit_result" style="margin-left : 30px;width: 75.75px; height: 30.8px;" value="Thống kê"></input>
                 </form>
-                <button type="button" class="btn btn-primary btn-sm" style="width: 75.75px; height: 30.8px;">Thống kê</button>
+               
                 <div class="result">
 
                 </div>
@@ -128,17 +163,28 @@
             center: [108,14],
             zoom: 5
         });
- 
+    <?php while($router_item=mysqli_fetch_array($result_router,MYSQLI_ASSOC))
+    {
+    ?>
     var marker = new mapboxgl.Marker()
-    .setLngLat([108,14])
-    .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+    .setLngLat([<?php echo $router_item['latitude'] ?>,<?php echo $router_item['longitude'] ?>])
     .addTo(map);
-    var marker1 = new mapboxgl.Marker()
-    .setLngLat([109,14])
-    .addTo(map);
-    var marker2 = new mapboxgl.Marker()
-    .setLngLat([110,14])
-    .addTo(map);
+    <?php 
+    }
+    ?>
+    
+
+
+    // var marker = new mapboxgl.Marker()
+    // .setLngLat([108,14])
+    // .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+    // .addTo(map);
+    // var marker1 = new mapboxgl.Marker()
+    // .setLngLat([109,14])
+    // .addTo(map);
+    // var marker2 = new mapboxgl.Marker()
+    // .setLngLat([110,14])
+    // .addTo(map);
     </script>
 </body>
 </html>

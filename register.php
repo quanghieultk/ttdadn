@@ -55,7 +55,7 @@
                 )";
              mysqli_query($conn,$sql);
             echo '<script language="javascript">alert("chúc mừng bạn đã đăng kí thành công!!");</script>';
-            header("location: home.php");
+
         }
     }
 ?>
