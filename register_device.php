@@ -23,11 +23,11 @@ if (isset($_POST["submit_device"]))
   {
 	  $mess= "Vui lòng nhập đầy đủ thông tin!!";
   }
-  
-  if (mysqli_num_rows(mysqli_query($conn,$select_sql))>0)
+  else if (mysqli_num_rows(mysqli_query($conn,$select_sql))>0)
   {
 	  $mess = "Device code đã tồn tại!!";
   }
+  else {
   $sql = "INSERT INTO devices (
 	user_id, 
 	name, 
@@ -51,7 +51,8 @@ if (isset($_POST["submit_device"]))
 	)";
 	$result =  mysqli_query($conn,$sql);
 	 kt_query($result,$sql);
-	$result_submit = "Bạn đã nhập thông tin!!";
+	$mess = "<p style = 'color:red'>Bạn đã đăng kí xe thành công!</p>";
+}
 }
 
 ?>
@@ -101,13 +102,18 @@ Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, Sony
 				<li class="text">Color :  </li>
 				<li><input name="color_device" type="text" required></li>
 			</ul>
+
+			<h3> <?php  if (isset($mess))
+                                {
+                                    echo $mess;
+                                }
+                                ?></h3> 
 			<div class="clear"></div>
 			<div class="agile-submit">
 				<input type="submit" name="submit_device" value="Register">
 				<input type="reset" value="reset">
 			</div>
-			<h2><?php echo $mess ?></h2>
-			<h2></h2>
+			
 			</form>
 		</div>	
 	</div>

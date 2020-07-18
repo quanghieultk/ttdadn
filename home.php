@@ -1,6 +1,8 @@
 <?php 
     session_start();
     require_once("connection.php"); 
+    $latitude = [];
+    $longitude = [];
     if(!isset($_SESSION['id']))
     {
         header('Location: login.php');
@@ -21,12 +23,10 @@
         kt_query($result_router,$query_router);
         while($router_item=mysqli_fetch_array($result_router,MYSQLI_ASSOC))
         {
-            echo ($router_item['latitude']);
-            echo ($router_item['longitude']);
+            array_push($latitude,$router_item['latitude']);
+            array_push($longitude,$router_item['longitude']);
         }
      }
-   
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +49,7 @@
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">GPS Website </a>
+        <a class="navbar-brand" href="home.php">GPS Website </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -57,7 +57,7 @@
         <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                 <li class="nav-item active">
-                    <a class="nav-link" href="#"><i class="fa fa-home"></i> Home <span class="sr-only">(current)</span></a>
+                    <a class="nav-link" href="home.php"><i class="fa fa-home"></i> Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fa fa-motorcycle"></i>Quản lí thết bị</a>
@@ -65,9 +65,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fa fa-history"></i>Lịch sử hành trình</a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="#"><i class="fa fa-cog"></i>Cài đặt</a>
-                </li>
+                </li> -->
             </ul>
             <form class="form-inline my-2 my-lg-0">
             <?php if(isset($_SESSION['username'])) 
@@ -82,7 +82,6 @@
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="info_user.php">Thông tin cá nhân</a>
                         <a class="dropdown-item" href="register_device.php">Đăng kí thiết bị</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="logout.php">Log out</a>
                     </div>
@@ -163,28 +162,19 @@
             center: [108,14],
             zoom: 5
         });
-    <?php while($router_item=mysqli_fetch_array($result_router,MYSQLI_ASSOC))
+
+    var lat = <?php echo json_encode($latitude)?>;
+    var long = <?php echo json_encode($longitude)?>;
+    console.log(lat);
+    console.log(long);
+    for(var i = 0; i < lat.length; i++)
     {
-    ?>
-    var marker = new mapboxgl.Marker()
-    .setLngLat([<?php echo $router_item['latitude'] ?>,<?php echo $router_item['longitude'] ?>])
-    .addTo(map);
-    <?php 
+        var marker = new mapboxgl.Marker()
+            .setLngLat([lat[i], long[i]])
+            .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+            .addTo(map);
     }
-    ?>
     
-
-
-    // var marker = new mapboxgl.Marker()
-    // .setLngLat([108,14])
-    // .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
-    // .addTo(map);
-    // var marker1 = new mapboxgl.Marker()
-    // .setLngLat([109,14])
-    // .addTo(map);
-    // var marker2 = new mapboxgl.Marker()
-    // .setLngLat([110,14])
-    // .addTo(map);
     </script>
 </body>
 </html>
