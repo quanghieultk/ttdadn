@@ -14,20 +14,20 @@
         $select_sql="SELECT username FROM users WHERE username='".$username."' ";    
         if($username==""||$password==""||$re_password=="")
         {
-            echo '<script language="javascript">alert("Vui lòng nhập đầy đủ thông tin!!");</script>';
+           $message = "<p style = 'color:red'>Vui lòng nhập đầy đủ thông tin!!</p>";
         }
         
-        if (mysqli_num_rows(mysqli_query($conn,$select_sql))>0)
+         else if (mysqli_num_rows(mysqli_query($conn,$select_sql))>0)
         {
-            echo '<script>alert("Tên đăng nhập đã tồn tại!!");</script>';
+            $message = "<p style = 'color:red'>Tên đăng nhập đã tồn tại!! </p>";
         }
-        if($password!=$re_password) 
+         else if($password!=$re_password) 
         {
-            echo '<script language="javascript">alert("Mật khẩu không trùng nhau!!");</script>';
+            $message = "<p style = 'color:red'>Mật khẩu không trùng nhau!! </p>";
         }
-        $password = md5($password);
+        else
         {
-            
+            $password = md5($password);
             $sql = "INSERT INTO users (
                 username, 
                 password, 
@@ -54,7 +54,7 @@
                 now()
                 )";
              mysqli_query($conn,$sql);
-            echo '<script language="javascript">alert("chúc mừng bạn đã đăng kí thành công!!");</script>';
+            $message = "<p>style = 'color:green'>chúc mừng bạn đã đăng kí thành công!!</p>";
 
         }
     }
@@ -105,6 +105,13 @@
                                 <input type="checkbox" name="agree-term" id="agree-term" class="agree-term" />
                                 <label for="agree-term" class="label-agree-term"><span><span></span></span>I agree all statements in  <a href="#" class="term-service">Terms of service</a></label>
                             </div>
+                            <div>
+                                <?php  if (isset($message))
+                                {
+                                    echo $message;
+                                }
+                                ?>
+                            </div>
                             <div class="form-group form-button">
                                 <input type="submit" name="btn-signup" id="signup" class="form-submit" value="Register"/>
                             </div>
@@ -114,6 +121,7 @@
                         <figure><img src="images/gps_logout.jpg" alt="sing up image"></figure>
                         <a href="#" class="signup-image-link">I am already member</a>
                     </div>
+                    
                 </div>
             </div>
         </section>

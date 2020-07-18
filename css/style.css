@@ -577,6 +577,9 @@ label.valid {
 
   .form-title {
     text-align: center; } }
+  .redcolor {
+    color : red;
+  }
 @media screen and (max-width: 400px) {
   .social-login {
     flex-direction: column;
@@ -588,5 +591,6 @@ label.valid {
   .social-label {
     margin-right: 0px;
     margin-bottom: 10px; } }
+
 
 /*# sourceMappingURL=style.css.map */

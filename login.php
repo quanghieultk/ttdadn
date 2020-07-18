@@ -21,9 +21,10 @@ if (isset($_POST["login_submit"]))
    {
        $login_password=($_POST["login_password"]);
    }
-   $login_password = md5($login_password);
+   
    if (empty($errors))
    {
+        $login_password = md5($login_password);
        //------------------------------------------------------//           
        $query = "SELECT id, username, password, firstname,lastname FROM users WHERE username='{$login_username}' AND password='{$login_password}'";
        $result = mysqli_query($conn,$query);
@@ -37,12 +38,12 @@ if (isset($_POST["login_submit"]))
        }
        else 
        {
-           $message="<p class='redcolor'>Tài khoản hoặc mật khẩu không đúng </p>";
+           $message="<p style = 'color:red'>Tài khoản hoặc mật khẩu không đúng </p>";
        }
    }
    else 
    {
-       $message="<p class='redcolor'>Bạn hãy nhập đầy đủ thông tin!</p>";
+       $message="<p style = 'color:red'>Bạn hãy nhập đầy đủ thông tin!</p>";
    }
 }
 
@@ -88,10 +89,15 @@ if (isset($_POST["login_submit"]))
                                 <input type="checkbox" name="remember-me" id="remember-me" class="agree-term" />
                                 <label for="remember-me" class="label-agree-term"><span><span></span></span>Remember me</label>
                             </div>
+                            <div> <?php  if (isset($message))
+                                {
+                                    echo $message;
+                                }
+                                ?></div> 
                             <div class="form-group form-button">
                                 <input type="submit" name="login_submit" id="signin" class="form-submit" value="Log in"/>
                             </div>
-                            <div><?php $message?></div> 
+                            
                         </form>
                         <div class="social-login">
                             <span class="social-label">Or login with</span>

@@ -21,7 +21,7 @@
         kt_query($result_router,$query_router);
         while($router_item=mysqli_fetch_array($result_router,MYSQLI_ASSOC))
         {
-           echo ($router_item['latitude']);
+            echo ($router_item['latitude']);
             echo ($router_item['longitude']);
         }
      }
