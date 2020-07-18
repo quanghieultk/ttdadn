@@ -7,7 +7,7 @@
         $magnitude = $_POST["magnitude"];
 
         $message = '[{"device_id":"LightD","values":["'.$status.'","'.$magnitude.'"]}]';
-        require('./phpMQTT/phpMQTT-master/phpMQTT.php');
+        require('phpMQTT.php');
 
         $server = '13.67.74.76';     // change if necessary
         $port = 1883;                     // change if necessary
