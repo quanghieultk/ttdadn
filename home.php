@@ -125,7 +125,7 @@
                                     while($result_user=mysqli_fetch_array($result,MYSQLI_ASSOC))
                                     {
                                         ?>
-                                        <option <?php if(isset($_POST['id_device'])) { if($result_user['id'] == $_POST['id_device']) echo "selected";} ?> value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
+                                        <option <?php if(isset($_POST['id_device'])) { if($result_user['id'] == $_POST['id_device']) echo "selected"; }?> value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
                                     <?php
                                     };
                                 ?>                             
@@ -196,8 +196,27 @@
         coor.push(long[j]);
         window.coordinates.push(coor);
         coor = [];
-    }
+    }    
+function distance(lat1, lon1, lat2, lon2) {
+    var p = 0.017453292519943295;    // Math.PI / 180
+    var c = Math.cos;
+    var a = 0.5 - c((lat2 - lat1) * p)/2 + 
+            c(lat1 * p) * c(lat2 * p) * 
+            (1 - c((lon2 - lon1) * p))/2;
     
+    return 12742 * Math.asin(Math.sqrt(a)); // 2 * R; R = 6371 km
+}
+console.log(distance(10.773480,106.660169, 10.882341,106.805584));
+var arr = [];
+for(var i = 0; i < lat.length - 1; i++)
+{
+    lat1 = lat[i];
+    lat2 = lat[i+1];
+    long1 = long[i];
+    long2 = long[i+1];
+    arr.push(distance(long1, lat1,long2,lat2));
+}
+console.log(arr);
 map.on('load', drawRoutes);
 function drawRoutes() {
 	map.addSource('route', {
