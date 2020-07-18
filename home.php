@@ -120,12 +120,12 @@
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Thiết bị</label>
                         <div class="col-sm-8">
                             <select class="custom-select form-control form-control-sm" id="colFormLabelSm" name="id_device" placeholder="Tên thiết bị" style="height: 31px;font-size: .875rem;"> 
-                                <option selected>Choose...</option>
+                            <option selected>Choose...</option>
                                 <?php 
                                     while($result_user=mysqli_fetch_array($result,MYSQLI_ASSOC))
                                     {
                                         ?>
-                                        <option value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
+                                        <option <?php if(isset($_POST['id_device'])) { if($result_user['id'] == $_POST['id_device']) echo "selected";} ?> value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
                                     <?php
                                     };
                                 ?>                             
@@ -135,13 +135,13 @@
                     <div class="form-group row">
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Từ ngày</label>
                         <div class="col-sm-8">
-                        <input type="datetime-local" name="date_from" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
+                        <input type="datetime-local" value ="<?php if(isset($_POST['date_from'])) {echo $_POST['date_from'];}   ?>" name="date_from" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="colFormLabelSm" class="col-sm-4 col-form-label col-form-label-sm text-right">Đến ngày</label>
                         <div class="col-sm-8">
-                        <input type="datetime-local" name="date_to" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
+                        <input type="datetime-local" value ="<?php if(isset($_POST['date_to'])) {echo $_POST['date_to'];}   ?>" name="date_to" class="form-control form-control-sm" id="colFormLabelSm" placeholder="col-form-label-sm">
                         </div>
                     </div>
 
