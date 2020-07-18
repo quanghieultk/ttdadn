@@ -3,6 +3,7 @@
     require_once("connection.php"); 
     $latitude = [];
     $longitude = [];
+    $date_device = [];
     if(!isset($_SESSION['id']))
     {
         header('Location: login.php');
@@ -13,11 +14,21 @@
     $query = "SELECT * FROM devices WHERE user_id='{$id}'";
     $result = mysqli_query($conn,$query);
     kt_query($result,$query); 
+    $name_device = "";
     if (isset($_POST["submit_result"]))
      {
         $id_device = $_POST['id_device'];
         $date_from = $_POST['date_from'];
         $date_to = $_POST['date_to'];
+        //select name xe
+        $query_name_moto = "SELECT name FROM devices WHERE id='{$id_device}'";
+        $result_name_moto = mysqli_query($conn,$query_name_moto);
+        kt_query($result_name_moto,$query_name_moto);
+        while($a=mysqli_fetch_array($result_name_moto,MYSQLI_ASSOC))
+        {
+            $name_device = $a['name'];
+        }
+
         $query_router = "SELECT * FROM deviceroute WHERE id_device='{$id_device}' AND (date_update < '{$date_to}') AND (date_update) > '{$date_from}' ";
         $result_router = mysqli_query($conn,$query_router);
         kt_query($result_router,$query_router);
@@ -25,6 +36,7 @@
         {
             array_push($latitude,$router_item['latitude']);
             array_push($longitude,$router_item['longitude']);
+            array_push($date_device,$router_item['date_update']);
         }
      }
 ?>
@@ -116,9 +128,7 @@
                                         <option value=<?php echo($result_user['id'])?>><?php echo($result_user['name']);?></option> 
                                     <?php
                                     };
-                                ?>
-                               
-                               
+                                ?>                             
                             </select>
                         </div>
                     </div>
@@ -165,15 +175,56 @@
 
     var lat = <?php echo json_encode($latitude)?>;
     var long = <?php echo json_encode($longitude)?>;
+    var date = <?php echo json_encode($date_device)?>;
     console.log(lat);
     console.log(long);
     for(var i = 0; i < lat.length; i++)
     {
+        var name_device = <?php echo json_encode($name_device) ?>;
         var marker = new mapboxgl.Marker()
             .setLngLat([lat[i], long[i]])
-            .setPopup(new mapboxgl.Popup().setHTML("<h1>Hello World!</h1>"))
+            .setPopup(new mapboxgl.Popup().setHTML("Tên: "+ name_device + "</br>" + "Vị trí: " + lat[i] + "," +long[i] + "</br>"+"Ngày: "+date[i] ))
             .addTo(map);
     }
+    window.coordinates = [];
+    var lat_temp = 0;
+    var long_temp = 0;
+    var coor = [];
+    for(var j = 0; j < lat.length; j++)
+    {
+        coor.push(lat[j]);
+        coor.push(long[j]);
+        window.coordinates.push(coor);
+        coor = [];
+    }
+    
+map.on('load', drawRoutes);
+function drawRoutes() {
+	map.addSource('route', {
+		'type': 'geojson',
+		'data': {
+		'type': 'Feature',
+		'properties': {},
+		'geometry': {
+			'type': 'LineString',
+			'coordinates': window.coordinates
+			}
+		}
+	});
+    map.addLayer({
+        'id': 'route',
+        'type': 'line',
+        'source': 'route',
+        'layout': {
+            'line-join': 'round',
+            'line-cap': 'round'
+        },
+        'paint': {
+            'line-color': '#888',
+            'line-width': 8
+        }
+    });
+}
     
     </script>
 </body>
